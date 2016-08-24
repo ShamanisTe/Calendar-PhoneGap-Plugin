@@ -142,6 +142,8 @@ public abstract class AbstractCalendarAccessor {
     CALENDARS_ID,
     CALENDARS_NAME,
     CALENDARS_VISIBLE,
+    CALENDARS_ACCOUNT_NAME,
+    CALENDARS_OWNER_ACCOUNT,
     EVENTS_ID,
     EVENTS_CALENDAR_ID,
     EVENTS_DESCRIPTION,
@@ -258,7 +260,9 @@ public abstract class AbstractCalendarAccessor {
     Cursor cursor = queryCalendars(
         new String[]{
             this.getKey(KeyIndex.CALENDARS_ID),
-            this.getKey(KeyIndex.CALENDARS_NAME)
+            this.getKey(KeyIndex.CALENDARS_NAME),
+            //this.getKey(KeyIndex.CALENDARS_ACCOUNT_NAME),
+            //this.getKey(KeyIndex.CALENDARS_OWNER_ACCOUNT)
         },
         this.getKey(KeyIndex.CALENDARS_VISIBLE) + "=1", null, null
     );
@@ -271,6 +275,36 @@ public abstract class AbstractCalendarAccessor {
         JSONObject calendar = new JSONObject();
         calendar.put("id", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_ID))));
         calendar.put("name", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_NAME))));
+        //calendar.put("accountName", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_ACCOUNT_NAME))));
+        //calendar.put("ownerAccount", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_OWNER_ACCOUNT))));
+        calendarsWrapper.put(calendar);
+      } while (cursor.moveToNext());
+      cursor.close();
+    }
+    return calendarsWrapper;
+  }
+
+  public final JSONArray getPrimaryCalendars() throws JSONException {
+    Cursor cursor = queryCalendars(
+            new String[]{
+                    this.getKey(KeyIndex.CALENDARS_ID),
+                    this.getKey(KeyIndex.CALENDARS_NAME),
+                    this.getKey(KeyIndex.CALENDARS_ACCOUNT_NAME),
+                    this.getKey(KeyIndex.CALENDARS_OWNER_ACCOUNT)
+            },
+            this.getKey(KeyIndex.CALENDARS_ACCOUNT_NAME) + "=" + this.getKey(KeyIndex.CALENDARS_OWNER_ACCOUNT), null, null
+    );
+    if (cursor == null) {
+      return null;
+    }
+    JSONArray calendarsWrapper = new JSONArray();
+    if (cursor.moveToFirst()) {
+      do {
+        JSONObject calendar = new JSONObject();
+        calendar.put("id", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_ID))));
+        calendar.put("name", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_NAME))));
+        calendar.put("accountName", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_ACCOUNT_NAME))));
+        calendar.put("ownerAccount", cursor.getString(cursor.getColumnIndex(this.getKey(KeyIndex.CALENDARS_OWNER_ACCOUNT))));
         calendarsWrapper.put(calendar);
       } while (cursor.moveToNext());
       cursor.close();
@@ -427,6 +461,14 @@ public abstract class AbstractCalendarAccessor {
         nrDeletedRecords = resolver.delete(eventUri, null, null);
       }
     }
+    return nrDeletedRecords > 0;
+  }
+
+  public boolean deleteEventById(Uri eventsUri, long eventId) {
+    ContentResolver resolver = this.cordova.getActivity().getApplicationContext().getContentResolver();
+    int nrDeletedRecords = 0;
+    Uri eventUri = ContentUris.withAppendedId(eventsUri, eventId);
+    nrDeletedRecords = resolver.delete(eventUri, null, null);
     return nrDeletedRecords > 0;
   }
 

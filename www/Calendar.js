@@ -266,6 +266,30 @@ Calendar.prototype.listCalendars = function (successCallback, errorCallback) {
   cordova.exec(successCallback, errorCallback, "Calendar", "listCalendars", []);
 };
 
+Calendar.prototype.createEventsWithOptions = function (arrayEvents, options, successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "Calendar", "createEventsWithOptions", arrayEvents)
+};
+
+Calendar.prototype.createEvents = function (arrayEvents, successCallback, errorCallback) {
+  Calendar.prototype.createEventsWithOptions(arrayEvents, {}, successCallback, errorCallback);
+};
+
+Calendar.prototype.deleteEvents = function (arrayEvents, successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "Calendar", "deleteEvents", arrayEvents)
+};
+
+Calendar.prototype.deleteEventByEventId = function (eventId, successCallback, errorCallback) {
+  Calendar.prototype.deleteEventsByEventId([eventId], successCallback, errorCallback);
+};
+
+Calendar.prototype.deleteEventsByEventId = function (arrayEventsId, successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "Calendar", "deleteEventsByEventId", arrayEventsId);
+};
+
+Calendar.prototype.listPrimaryCalendars = function (successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "Calendar", "listPrimaryCalendars", []);
+};
+
 Calendar.install = function () {
   if (!window.plugins) {
     window.plugins = {};

@@ -57,6 +57,8 @@ public class CalendarProviderAccessor extends AbstractCalendarAccessor {
     keys.put(KeyIndex.CALENDARS_ID, Calendars._ID);
     keys.put(KeyIndex.CALENDARS_NAME, Calendars.NAME);
     keys.put(KeyIndex.CALENDARS_VISIBLE, Calendars.VISIBLE);
+    keys.put(KeyIndex.CALENDARS_ACCOUNT_NAME, Calendars.ACCOUNT_NAME);
+    keys.put(KeyIndex.CALENDARS_OWNER_ACCOUNT, Calendars.OWNER_ACCOUNT);
     keys.put(KeyIndex.EVENTS_ID, Events._ID);
     keys.put(KeyIndex.EVENTS_CALENDAR_ID, Events.CALENDAR_ID);
     keys.put(KeyIndex.EVENTS_DESCRIPTION, Events.DESCRIPTION);
@@ -117,6 +119,11 @@ public class CalendarProviderAccessor extends AbstractCalendarAccessor {
     eventsUri = eventsUri == null ? Uri.parse(CONTENT_PROVIDER + CONTENT_PROVIDER_PATH_EVENTS) : eventsUri;
     return super.deleteEvent(eventsUri, startFrom, startTo, title, location);
   }
+  @Override
+  public boolean deleteEventById(Uri eventsUri, long eventId) {
+    eventsUri = eventsUri == null ? Uri.parse(CONTENT_PROVIDER + CONTENT_PROVIDER_PATH_EVENTS) : eventsUri;
+    return super.deleteEventById(eventsUri, eventId);
+  }
 
   @Override
   public String createEvent(Uri eventsUri, String title, long startTime, long endTime,
@@ -127,4 +134,5 @@ public class CalendarProviderAccessor extends AbstractCalendarAccessor {
     return super.createEvent(eventsUri, title, startTime, endTime, description, location,
         firstReminderMinutes, secondReminderMinutes, recurrence, recurrenceInterval, recurrenceEndTime, calendarId, url);
   }
+
 }
