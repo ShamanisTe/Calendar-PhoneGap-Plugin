@@ -221,7 +221,7 @@ public class Calendar extends CordovaPlugin {
     } else if (requestCode == PERMISSION_REQCODE_DELETE_EVENTS_BY_EVENT_ID) {
       deleteEventsByEventId(requestArgs);
     } else if(requestCode == PERMISSION_REQCODE_LIST_PRIMARY_CALENDARS){
-      listPrimaryCalendars(requestArgs);
+      listPrimaryCalendars();
     } else if (requestCode == PERMISSION_REQCODE_FIND_EVENTS) {
       findEvents(requestArgs);
     } else if (requestCode == PERMISSION_REQCODE_LIST_CALENDARS) {
